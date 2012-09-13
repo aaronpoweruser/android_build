@@ -16,6 +16,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - cmrebase: Rebase a Gerrit change and push it again
 - mka:      Builds using SCHED_BATCH on all processors
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
+- mkapush:  Same as mka with the addition of adb pushing to the device.
 
 Look at the source to view more functions. The complete list is:
 EOF
@@ -26,6 +27,58 @@ EOF
       A="$A $i"
     done
     echo $A
+}
+
+function mkapush() {
+    # There's got to be a better way to do this stupid shit.
+    case `uname -s` in
+        Darwin)
+            if [ ! -f $ANDROID_PRODUCT_OUT/installed-files.txt ]; then
+                make -j `sysctl hw.ncpu|cut -d" " -f2` installed-file-list
+            fi
+            make -j `sysctl hw.ncpu|cut -d" " -f2` "$@"
+            ;;
+        *)
+            if [ ! -f $ANDROID_PRODUCT_OUT/installed-files.txt ]; then
+                schedtool -B -n 1 -e ionice -n 1 make -j `cat /proc/cpuinfo | grep "^processor" | wc -l` installed-file-list
+            fi
+            schedtool -B -n 1 -e ionice -n 1 make -j `cat /proc/cpuinfo | grep "^processor" | wc -l` "$@"
+            ;;
+    esac
+    case $@ in
+        *\ * )
+            echo $@ | awk 'gsub(/ /,"\n") {print}' | while read line; do
+                blackmagic=`sed -n "/$line/{p;q;}" $ANDROID_PRODUCT_OUT/installed-files.txt | awk {'print $2'}`
+                if [ `echo $blackmagic | cut -f3 -d "/" = framework ];
+                elif [ `echo $blackmagic | cut -f4 -d "/" = SystemUI.apk ]; then
+                    adb_stop=true
+                fi
+                adb remount
+                if [ $adb_stop = true ]; then
+                    adb shell stop
+                fi
+                adb push $ANDROID_PRODUCT_OUT$blackmagic $blackmagic
+                if [ $adb_stop = true ]; then
+                    adb shell start
+                fi
+            done
+            ;;
+        *)
+            blackmagic=`sed -n "/$@/{p;q;}" $ANDROID_PRODUCT_OUT/installed-files.txt | awk {'print $2'}`
+            if [ `echo $blackmagic | cut -f3 -d "/" = framework ];
+            elif [ `echo $blackmagic | cut -f4 -d "/" = SystemUI.apk ]; then
+                adb_stop=true
+            fi
+            adb remount
+            if [ $adb_stop = true ]; then
+                adb shell stop
+            fi
+            adb push $ANDROID_PRODUCT_OUT$blackmagic $blackmagic
+            if [ $adb_stop = true ]; then
+                adb shell start
+            fi
+            ;;
+    esac
 }
 
 # Get the value of a build variable as an absolute path.
@@ -445,9 +498,9 @@ function add_lunch_combo()
 }
 
 # add the default one here
-add_lunch_combo full-eng
-add_lunch_combo full_x86-eng
-add_lunch_combo vbox_x86-eng
+#add_lunch_combo full-eng
+#add_lunch_combo full_x86-eng
+#add_lunch_combo vbox_x86-eng
 
 function print_lunch_menu()
 {
@@ -602,7 +655,7 @@ function lunch()
     export TARGET_BUILD_TYPE=release
 
     echo
-
+    export CM_FAST_BUILD=1
     set_stuff_for_environment
     printconfig
 }
@@ -650,8 +703,8 @@ function tapas()
 function eat()
 {
     if [ "$OUT" ] ; then
-        MODVERSION=`sed -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
-        ZIPFILE=cm-$MODVERSION.zip
+      #  MODVERSION=`sed -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
+        ZIPFILE=cookies_cream-*.zip
         ZIPPATH=$OUT/$ZIPFILE
         if [ ! -f $ZIPPATH ] ; then
             echo "Nothing to eat"
