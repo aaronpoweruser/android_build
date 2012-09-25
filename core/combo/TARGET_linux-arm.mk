@@ -163,8 +163,7 @@ else
 TARGET_GLOBAL_CFLAGS +=	-mno-thumb-interwork
 endif
 
-TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
-
+TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden 
 # More flags/options can be added here
 TARGET_RELEASE_CFLAGS += \
 			-DNDEBUG \
