@@ -26,16 +26,6 @@ PRODUCT_PACKAGES := \
     libfwdlockengine 
 
 PRODUCT_PACKAGES += \
-    Galaxy4 \
-    HoloSpiralWallpaper \
-    LiveWallpapers \
-    LiveWallpapersPicker \
-    MagicSmokeWallpapers \
-    NoiseField \
-    PhaseBeam \
-    VisualizationWallpapers
-
-PRODUCT_PACKAGES += \
     libvideoeditor_jni \
     libvideoeditor_core \
     libvideoeditor_osal \
