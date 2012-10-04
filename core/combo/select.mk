@@ -46,7 +46,7 @@ $(combo_target)HAVE_STRLCPY := 0
 $(combo_target)HAVE_STRLCAT := 0
 $(combo_target)HAVE_KERNEL_MODULES := 0
 
-$(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
+$(combo_target)GLOBAL_CFLAGS := -O2 -g -fno-strict-aliasing
 $(combo_target)RELEASE_CFLAGS := -O3 -g fno-strict-aliasing
 ifneq ($(combo_target),HOST_)
 $(combo_target)RELEASE_CFLAGS += 
