@@ -159,7 +159,7 @@ TARGET_GLOBAL_LDFLAGS += \
 # since sometimes thumb-interwork appears to be default), we
 # specifically disable when thumb support is unavailable.
 ifeq ($(ARCH_ARM_HAVE_THUMB_SUPPORT),true)
-TARGET_GLOBAL_CFLAGS +=	-mthumb-interwork
+TARGET_GLOBAL_CFLAGS +=	
 else
 TARGET_GLOBAL_CFLAGS +=	-mno-thumb-interwork
 endif

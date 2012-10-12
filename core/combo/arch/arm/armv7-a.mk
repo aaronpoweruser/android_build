@@ -40,15 +40,15 @@ arch_variant_cflags := \
     -march=armv7-a
 endif
 
-ifneq ($(strip $(TARGET_ARCH_VARIANT_FPU)),)
-arch_variant_cflags += \
-	-mfloat-abi=softfp \
-	-mfpu=$(strip $(TARGET_ARCH_VARIANT_FPU))
-else
+#ifneq ($(strip $(TARGET_ARCH_VARIANT_FPU)),)
+#arch_variant_cflags += \
+#	-mfloat-abi=softfp \
+#	-mfpu=$(strip $(TARGET_ARCH_VARIANT_FPU))
+#else
 # fall back on soft tunning if fpu is not specified
-arch_variant_cflags += \
-	-mfloat-abi=soft
-endif
+#arch_variant_cflags += \
+#	-mfloat-abi=soft
+#endif
 
 ifeq ($(strip $(TARGET_ARCH_VARIANT_CPU)),cortex-a8)
 arch_variant_ldflags := \
