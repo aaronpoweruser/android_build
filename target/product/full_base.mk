@@ -23,16 +23,9 @@ PRODUCT_PACKAGES := \
     drmserver \
     libdrmframework \
     libdrmframework_jni \
-    libfwdlockengine \
-    VideoEditor \
-    WAPPushManager
+    libfwdlockengine 
 
-PRODUCT_PACKAGES += \
-    libvideoeditor_jni \
-    libvideoeditor_core \
-    libvideoeditor_osal \
-    libvideoeditor_videofilters \
-    libvideoeditorplayer
+
 
 # Additional settings used in all AOSP builds
 PRODUCT_PROPERTY_OVERRIDES := \

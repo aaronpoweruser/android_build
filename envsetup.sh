@@ -142,7 +142,7 @@ function setpaths()
 
     # default toolchain directory
     if [ -z "$TOOLCHAIN_DIR" ]; then
-      export TOOLCHAIN_DIR=linaro-4.7-2012.09
+      export TOOLCHAIN_DIR=linaro-4.7
     fi
     # The gcc toolchain does not exists for windows/cygwin. In this case, do not reference it.
     export ANDROID_EABI_TOOLCHAIN=
@@ -447,10 +447,7 @@ function add_lunch_combo()
     LUNCH_MENU_CHOICES=(${LUNCH_MENU_CHOICES[@]} $new_combo)
 }
 
-# add the default one here
-add_lunch_combo full-eng
-add_lunch_combo full_x86-eng
-add_lunch_combo vbox_x86-eng
+
 
 function print_lunch_menu()
 {
@@ -528,6 +525,7 @@ alias bib=breakfast
 
 function lunch()
 {
+    export CM_FAST_BUILD=1
     local answer
 
     if [ "$1" ] ; then
